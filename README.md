@@ -16,37 +16,40 @@ Bedroom Light,10.0.0.102,9999,HS200
 
 **To Enable The Command Line Interface Edit index.php**
 
-Find '''define('cli', false);''' change it to '''define('cli', true);'''
+Find 
+>define('cli', false); 
+change it to 
+>define('cli', true);
 
-If you are sending commands and nothing is happening try changing '''"define('debug', false);"''' to '''"define('debug', true);"'''
+If you are sending commands and nothing is happening try changing 
+>define('debug', false);
+to
+>define('debug', true);
+
 it will just echos out some useful information.
 
 **Debug Mode works better in CLI**
 
-##Examples
+## Examples
 
 Usage: 
-'''
-php.exe index.php "IP" "Port" "Command(On/Off)" "Device Type"
-'''
+>php.exe index.php "IP" "Port" "Command(On/Off)" "Device Type"
+
 Usage:
-'''
-php.exe index.php "10.0.0.178" "9999" "Off" "HS105"
-'''
+>php.exe index.php "10.0.0.178" "9999" "Off" "HS105"
 
 **RAW Commands can be send via CLI**
+Usage: 
+>php.exe index.php "10.0.0.178" "9999" "raw" "HS105" {\"system\":{\"get_sysinfo\":null}}
 
-'''
-Usage: php.exe index.php "10.0.0.178" "9999" "raw" "HS105" {\"system\":{\"get_sysinfo\":null}}
-'''
 
 When a RAW command is used the reply from the device will be given.
 
-###Using raw sends whatever you want directly to the device BE CAREFUL!
+### Using raw sends whatever you want directly to the device BE CAREFUL!
 
 ---
 
-#CLI Windows Help
+# CLI Windows Help
 
 The Smallest you can get this to run on windows is 5 files. *Unless you have php with sockets already then its 1 **index.php** file*
 
@@ -75,5 +78,6 @@ If you want the php_sockets.dll to be in a folder change '''extension_dir = "." 
 Then you are done. Open your fav CMD line app and use the usage examples above.
 
 ---
-#TODO
+# TODO 
+
 Link Multiple Devices On One Click
