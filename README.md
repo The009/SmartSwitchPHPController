@@ -18,11 +18,13 @@ Bedroom Light,10.0.0.102,9999,HS200
 
 Find 
 >define('cli', false); 
+
 change it to 
 >define('cli', true);
 
 If you are sending commands and nothing is happening try changing 
 >define('debug', false);
+
 to
 >define('debug', true);
 
@@ -67,13 +69,13 @@ Put them where you wish this to run from IE:
 >C:\ManualPrograms\SmartSwitchPHPController\
 
 You will need to create a "php-cli.ini" file with the contents of:
-'''
+```
 [PHP]
 extension=php_sockets.dll
 extension_dir = "."
-'''
+```
 
-If you want the php_sockets.dll to be in a folder change '''extension_dir = "." '''to '''extension_dir = "folderName/"'''
+If you want the php_sockets.dll to be in a folder change ```extension_dir = "." ```to ```extension_dir = "folderName/"```
 
 Then you are done. Open your fav CMD line app and use the usage examples above.
 
