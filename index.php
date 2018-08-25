@@ -28,16 +28,30 @@
  define('cli', false);
 
 //No Further Options
+
+$csv = array();
+$devicesDisplayed = false;
+$group = "";
+
 if(cli){
-		$ip = $argv[1];
-		$port = $argv[2];
-		$action = $argv[3];
-		$deviceType = $argv[4];
-		if(count($argv) == 6){
-			$rawCommand = $argv[5];
-		}
-		else{
-			$rawCommand = "";
+		if($argv[1] == "group"){
+			$group = $argv[2];
+			$action = $argv[3];
+			$ip = "";
+			$port = "";
+			$deviceType = "";
+
+		}else{
+			$ip = $argv[1];
+			$port = $argv[2];
+			$action = $argv[3];
+			$deviceType = $argv[4];
+			if(count($argv) == 6){
+				$rawCommand = $argv[5];
+			}
+			else{
+				$rawCommand = "";
+			}
 		}
 }
 else{
@@ -45,6 +59,7 @@ else{
 	$port = isset($_GET['port']) ? $_GET['port'] : '';
 	$action = isset($_GET['action']) ? $_GET['action'] : '';
 	$deviceType = isset($_GET['deviceType']) ? $_GET['deviceType'] : '';
+	$group = isset($_GET['group']) ? $_GET['group'] : '';
 }
 
 if(debug){
@@ -55,17 +70,38 @@ if(debug){
 	echo("RawCMDType: " . $deviceType . "\n" );
 }
 
+if($group != "" && $action != ""){
+	if(debug)echo("Sending Group: " . $group . "\n Action: " . $action . "\n");
+	groupSend($action, $group);
+}
+else{
+	if($ip)if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE)){} else { die("".$ip." is not a valid IP address");}
+	if($port)if(($port >= 1) && ($port <= 65535)){} else { die("$port is not a valid port");}
+	if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
+	if($deviceType)if(preg_match("/^[a-zA-Z0-9]+$/", $deviceType) == 1){} else { die("$deviceType is not a valid DeviceType"); }
+	if(cli)if($action == "raw"){if(json_decode($rawCommand) != null ){} else { die("Your Raw Command dose not appear to be valid JSON!");}}
 
-if($ip)if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE)){} else { die("".$ip." is not a valid IP address");}
-if($port)if(($port >= 1) && ($port <= 65535)){} else { die("$port is not a valid port");}
-if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
-if($deviceType)if(preg_match("/^[a-zA-Z0-9]+$/", $deviceType) == 1){} else { die("$deviceType is not a valid DeviceType"); }
-if(cli)if($action == "raw"){if(json_decode($rawCommand) != null ){} else { die("Your Raw Command dose not appear to be valid JSON!");}}
+	if(!cli){ $rawCommand = "";}
 
-if(!cli){ $rawCommand = "";}
+	if( $ip && $port && $action && $deviceType != ""){
+		send($action, $deviceType, $ip, $port, $rawCommand);
+	}
+}
 
-if( $ip && $port && $action && $deviceType != ""){
-	send($action, $deviceType, $ip, $port, $rawCommand);
+function groupSend($action, $group){
+	foreach(getDevices() as $i => $item) {
+		if($item["group"] == $group){
+			if(debug)echo("Found Group '" . $group . "'\n");
+			send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
+		}
+		if($group == "all"){
+			if(debug)echo("Found Group '" . $group . "'\n");
+			send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
+		}
+		else{
+			if(debug)echo("Did Not Find Any Match Of Group '" . $group . "'\n");
+		}
+	}
 }
 
 if(!cli){
@@ -110,9 +146,9 @@ if(!cli){
     <div class="container">
 
      <!-- Page Features -->
-      <div class="row text-center my-3">
-<?php }
-
+     <div class="row text-center my-3">
+<?php
+}
 function getDevices()
 {
 	if(file_exists("devices.csv")){
@@ -121,30 +157,84 @@ function getDevices()
 	array_walk($csv, function(&$a) use ($csv) {
 	$a = array_combine($csv[0], $a);
 	});
-    array_shift($csv);
-
+	array_shift($csv);
 	}
 	else{
 		die("No Confing CSV Found");
 	}
+	return $csv;
+}
+function displayDeviceList($csv){
+?>
+	        <div class='col-lg-3 col-md-6 mb-4'>
+	          <div class='card'>
+		            <div class='card-body'>
+		              <h4 class='card-title'>All Lights</h4>
+					  <p class='card-text'></p>
+		            </div>
+		            <div class='card-footer'>
+		              <a href='?group=all&amp;action=On' class='btn btn-primary'>On</a>  -
+					  <a href='?group=all&amp;action=Off' class='btn btn-primary'>Off</a>
+		            </div>
+		          </div>
+		        </div>
+<?php
 
-	foreach($csv as $i => $item) {
+
+	$groupNumbers = array_column($csv, 'group');
+	$unique = array_merge(array_flip(array_flip($groupNumbers)));
+	$groupedLights = array();
+
+	foreach ($unique as $key2 => $uniqueGroupIDs){
+
+	if($uniqueGroupIDs != ""){
 echo <<<EOD
+	        <a name = "{i}"></a>
+	        <div class='col-lg-3 col-md-6 mb-4'>
+	          <div class='card'>
+		            <div class='card-body'>
+		              <h4 class='card-title'>{$uniqueGroupIDs}</h4>
+					  <p class='card-text'>
+EOD;
+
+		foreach($csv as $key => $value){
+		    if ($value["group"] == $uniqueGroupIDs && $value["group"] != "") {
+		     echo "" .$value['deviceName']. "<br>\n";
+		    }
+		}
+
+echo <<<EOD
+				        </p>
+		            </div>
+		            <div class='card-footer'>
+   		              <a href='?group={$uniqueGroupIDs}&amp;action=On' class='btn btn-primary'>On</a>  -
+					  <a href='?group={$uniqueGroupIDs}&amp;action=Off' class='btn btn-primary'>Off</a>
+		            </div>
+		          </div>
+		        </div>
+EOD;
+ }
+}
+
+foreach($csv as $i => $item) {
+echo <<<EOD
+	        <a name = "{i}"></a>
 	        <div class='col-lg-3 col-md-6 mb-4'>
 	          <div class='card'>
 		            <div class='card-body'>
 		              <h4 class='card-title'>{$item["deviceName"]}</h4>
-		              <p class='card-text'></p>
+					  <p class='card-text'></p>
 		            </div>
 		            <div class='card-footer'>
-		              <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=On&amp;deviceType={$item["deviceType"]}' class='btn btn-primary'>On</a>  -
-					  <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=Off&amp;deviceType={$item["deviceType"]}' class='btn btn-primary'>Off</a>
+		              <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=On&amp;deviceType={$item["deviceType"]}#{$i}' class='btn btn-primary'>On</a>  -
+					  <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=Off&amp;deviceType={$item["deviceType"]}#{$i}' class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
 EOD;
 	}
-}
+  }
+
 
 function send($command , $plugType, $ip, $port, $rawCommand = NULL)
 {
@@ -164,7 +254,10 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL)
 		break;
 		case "" : die("No Command");
 		break;
-	}
+		default:
+		die("Action error");
+		break;
+		}
 
 
 	if($plugType == "HS105"){
@@ -221,7 +314,7 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL)
 
 	socket_close($sock);
 
-	if(debug || ($rawCommand != "")){echo(json_decode(json_encode(decode($buff))));}
+	if(debug || ($rawCommand != "")){echo(json_decode(json_encode(decode($buff))) ."\n" );}
 }
 
 function decode($encodedMsg)
@@ -241,7 +334,11 @@ function decode($encodedMsg)
 
 
 	if(!cli){
-		getDevices();
+		;
+			if(!$devicesDisplayed){
+					$devicesDisplayed = true;
+					displayDeviceList(getDevices());
+			}
 ?>
 
       </div>

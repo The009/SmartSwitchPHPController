@@ -34,11 +34,21 @@ it will just echos out some useful information.
 
 ## Examples
 
-Usage: 
+Usage: Single Switch Example
 >php.exe index.php "IP" "Port" "Command(On/Off)" "Device Type"
 
-Usage:
+Usage: Turn On a single switch.
 >php.exe index.php "10.0.0.178" "9999" "Off" "HS105"
+
+Usage: Group usage example.
+>php.exe index.php "group" "group name" "action"
+
+Usage: To turn on just the group of "Living Room Lights"
+>php.exe index.php "group" "Living Room Lights" "on"
+
+Usage: To turn on every light in the config
+>php.exe index.php "group" "all" "on"
+
 
 **RAW Commands can be send via CLI**
 Usage: 
@@ -78,8 +88,3 @@ extension_dir = "."
 If you want the php_sockets.dll to be in a folder change ```extension_dir = "." ```to ```extension_dir = "folderName/"```
 
 Then you are done. Open your fav CMD line app and use the usage examples above.
-
----
-# TODO 
-
-Link Multiple Devices On One Click
