@@ -1,4 +1,4 @@
-# SmartSwitchPHPContoller
+# SmartSwitchPHPController
 A CLI or Web Interface written in PHP Using Sockets to directly control TP-Link Smart Switches
 
 **Requires PHP With Socksts** Web Interface Requires A Web Server
@@ -8,10 +8,10 @@ A CLI or Web Interface written in PHP Using Sockets to directly control TP-Link 
 
 **To add devices to the web interface EDIT/Follow The example of devices.csv**
 ```
-deviceName,deviceIP,devicePort,deviceType
-Living Room Light,10.0.0.100,9999,HS200
-Living Room Lamp,10.0.0.105,9999,HS105
-Bedroom Light,10.0.0.102,9999,HS200
+deviceName,deviceIP,devicePort,deviceType,group
+Living Room Light,10.0.0.100,9999,HS200,Living Room Lights
+Living Room Lamp,10.0.0.105,9999,HS105,Living Room Lights
+Bedroom Light,10.0.0.102,9999,HS200,
 ```
 
 **To Enable The Command Line Interface Edit index.php**
