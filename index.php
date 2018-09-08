@@ -381,7 +381,7 @@ function decode($encodedMsg)
     <footer class="py-5 bg-dark">
       <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; The009 <a href="http://www.the009.net" target="_blank">http://www.the009.net</a> 2018</p>
-	<p class="m-0 text-center text-white"><a href="http://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.0.0.0</a><br />
+	<p class="m-0 text-center text-white"><a href="http://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.0.0.1</a><br />
 	This work is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">The GNU General Public License v3.0</a>.</p>
       </div>
       <!-- /.container -->
