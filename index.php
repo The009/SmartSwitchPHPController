@@ -27,8 +27,13 @@
 //Enable Command Line Interface
  define('cli', false);
 
+//The Max Amout Of Time A Command Can Be Accepted For (Helps with browsers who open the last url you had open so you don't randomly change switch modes)
+  define('maxCMDAcceptTime', 3);
+
+
 //No Further Options
 
+define('currentTime', time());
 $csv = array();
 $devicesDisplayed = false;
 $group = "";
@@ -60,6 +65,7 @@ else{
 	$action = isset($_GET['action']) ? $_GET['action'] : '';
 	$deviceType = isset($_GET['deviceType']) ? $_GET['deviceType'] : '';
 	$group = isset($_GET['group']) ? $_GET['group'] : '';
+	$timeStamp = isset($_GET['timeStamp']) ? $_GET['timeStamp'] : '';
 }
 
 if(debug){
@@ -68,7 +74,29 @@ if(debug){
 	echo("Action: " . $action . "\n");
 	echo("DevTyp: " . $deviceType . "\n" );
 	echo("RawCMDType: " . $deviceType . "\n" );
+	echo("Time Stamp: " . $timeStamp . "\n" );
 }
+
+if(!cli){
+	if(!$timeStamp){
+		$timeStamp = (currentTime + maxCMDAcceptTime) + 55;
+	}
+
+	if(!is_numeric($timeStamp)){ die("Invalid Timestamp Format Detected");}
+
+	if(currentTime <= $timeStamp + maxCMDAcceptTime){
+	}
+	else{
+		$ip = "";
+		$port = "";
+		$action = "";
+		$deviceType = "";
+		$group = "";
+		$timeStamp = "";
+		header("location: ?");
+	}
+}
+
 
 if($group != "" && $action != ""){
 	if(debug)echo("Sending Group: " . $group . "\n Action: " . $action . "\n");
@@ -80,13 +108,14 @@ else{
 	if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
 	if($deviceType)if(preg_match("/^[a-zA-Z0-9]+$/", $deviceType) == 1){} else { die("$deviceType is not a valid DeviceType"); }
 	if(cli)if($action == "raw"){if(json_decode($rawCommand) != null ){} else { die("Your Raw Command dose not appear to be valid JSON!");}}
-
 	if(!cli){ $rawCommand = "";}
 
 	if( $ip && $port && $action && $deviceType != ""){
 		send($action, $deviceType, $ip, $port, $rawCommand);
 	}
+
 }
+
 
 function groupSend($action, $group){
 	foreach(getDevices() as $i => $item) {
@@ -165,6 +194,7 @@ function getDevices()
 	return $csv;
 }
 function displayDeviceList($csv){
+$currentTimeStamp = currentTime;
 ?>
 	        <div class='col-lg-3 col-md-6 mb-4'>
 	          <div class='card'>
@@ -173,8 +203,8 @@ function displayDeviceList($csv){
 					  <p class='card-text'></p>
 		            </div>
 		            <div class='card-footer'>
-		              <a href='?group=all&amp;action=On' class='btn btn-primary'>On</a>  -
-					  <a href='?group=all&amp;action=Off' class='btn btn-primary'>Off</a>
+		              <a href='?group=all&amp;action=On&amp;timeStamp={$currentTimeStamp}' class='btn btn-primary'>On</a>  -
+					  <a href='?group=all&amp;action=Off&amp;timeStamp={$currentTimeStamp}' class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
@@ -207,8 +237,8 @@ echo <<<EOD
 				        </p>
 		            </div>
 		            <div class='card-footer'>
-   		              <a href='?group={$uniqueGroupIDs}&amp;action=On' class='btn btn-primary'>On</a>  -
-					  <a href='?group={$uniqueGroupIDs}&amp;action=Off' class='btn btn-primary'>Off</a>
+   		              <a href='?group={$uniqueGroupIDs}&amp;action=On&amp;timeStamp={$currentTimeStamp}' class='btn btn-primary'>On</a>  -
+					  <a href='?group={$uniqueGroupIDs}&amp;action=Off&amp;timeStamp={$currentTimeStamp}' class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
@@ -226,8 +256,8 @@ echo <<<EOD
 					  <p class='card-text'></p>
 		            </div>
 		            <div class='card-footer'>
-		              <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=On&amp;deviceType={$item["deviceType"]}#{$i}' class='btn btn-primary'>On</a>  -
-					  <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=Off&amp;deviceType={$item["deviceType"]}#{$i}' class='btn btn-primary'>Off</a>
+		              <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=On&amp;deviceType={$item["deviceType"]}&amp;timeStamp={$currentTimeStamp}#{$i}' class='btn btn-primary'>On</a>  -
+					  <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=Off&amp;deviceType={$item["deviceType"]}&amp;timeStamp={$currentTimeStamp}#{$i}' class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
