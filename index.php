@@ -155,6 +155,16 @@ if(!cli){
 
 	<!-- Custom Icon for this template -->
 	<link rel="icon" type="image/png" href="vendor/icon/48px-System-shutdown.svg.png" />
+
+<script type="text/javascript">
+    function sendRequest(untimedURL, rowID = "top"){
+    var timeStamp = new Date();
+    var pageTo = '#' + rowID;
+    var timedURL = untimedURL + timeStamp.getTime() + pageTo;
+    window.location = timedURL;
+}
+    </script>
+
   </head>
 
   <body>
@@ -203,8 +213,8 @@ $currentTimeStamp = currentTime;
 					  <p class='card-text'></p>
 		            </div>
 		            <div class='card-footer'>
-		              <a href='?group=all&amp;action=On&amp;timeStamp=<?php echo($currentTimeStamp); ?>' class='btn btn-primary'>On</a>  -
-					  <a href='?group=all&amp;action=Off&amp;timeStamp=<?php echo($currentTimeStamp); ?>' class='btn btn-primary'>Off</a>
+		              <a href="javascript:sendRequest('?group=all&amp;action=On&amp;timeStamp=');" class='btn btn-primary'>On</a>
+					  <a href="javascript:sendRequest('?group=all&amp;action=Off&amp;timeStamp=');" class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
@@ -237,8 +247,8 @@ echo <<<EOD
 				        </p>
 		            </div>
 		            <div class='card-footer'>
-   		              <a href='?group={$uniqueGroupIDs}&amp;action=On&amp;timeStamp={$currentTimeStamp}' class='btn btn-primary'>On</a>  -
-					  <a href='?group={$uniqueGroupIDs}&amp;action=Off&amp;timeStamp={$currentTimeStamp}' class='btn btn-primary'>Off</a>
+   		              <a href="javascript:sendRequest('?group={$uniqueGroupIDs}&amp;action=On&amp;timeStamp=');" class='btn btn-primary'>On</a>  -
+					  <a href="javascript:sendRequest('?group={$uniqueGroupIDs}&amp;action=Off&amp;timeStamp=');" class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
@@ -256,8 +266,8 @@ echo <<<EOD
 					  <p class='card-text'></p>
 		            </div>
 		            <div class='card-footer'>
-		              <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=On&amp;deviceType={$item["deviceType"]}&amp;timeStamp={$currentTimeStamp}#{$i}' class='btn btn-primary'>On</a>  -
-					  <a href='?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=Off&amp;deviceType={$item["deviceType"]}&amp;timeStamp={$currentTimeStamp}#{$i}' class='btn btn-primary'>Off</a>
+		              <a href="javascript:sendRequest('?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=On&amp;deviceType={$item["deviceType"]}&amp;timeStamp=', {$i});" class='btn btn-primary'>On</a>  -
+					  <a href="javascript:sendRequest('?ip={$item["deviceIP"]}&amp;port={$item["devicePort"]}&amp;action=Off&amp;deviceType={$item["deviceType"]}&amp;timeStamp=', {$i});" class='btn btn-primary'>Off</a>
 		            </div>
 		          </div>
 		        </div>
@@ -381,7 +391,7 @@ function decode($encodedMsg)
     <footer class="py-5 bg-dark">
       <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; The009 <a href="http://www.the009.net" target="_blank">http://www.the009.net</a> 2018</p>
-	<p class="m-0 text-center text-white"><a href="http://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.0.0.2</a><br />
+	<p class="m-0 text-center text-white"><a href="http://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.0.0.3</a><br />
 	This work is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">The GNU General Public License v3.0</a>.</p>
       </div>
       <!-- /.container -->
