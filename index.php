@@ -33,7 +33,7 @@
 
 //No Further Options
 
-define('currentTime', time());
+define('currentTime', time() * 1000);
 $csv = array();
 $devicesDisplayed = false;
 $group = "";
@@ -84,7 +84,7 @@ if(!cli){
 
 	if(!is_numeric($timeStamp)){ die("Invalid Timestamp Format Detected");}
 
-	if(currentTime <= $timeStamp + maxCMDAcceptTime){
+	if(currentTime < $timeStamp + maxCMDAcceptTime){
 	}
 	else{
 		$ip = "";
@@ -100,6 +100,8 @@ if(!cli){
 
 if($group != "" && $action != ""){
 	if(debug)echo("Sending Group: " . $group . "\n Action: " . $action . "\n");
+	if($group)if(preg_match("/^[a-zA-Z0-9 \s]+$/", $group) == 1){} else { die("$group is not a valid Group"); }
+	if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
 	groupSend($action, $group);
 }
 else{
