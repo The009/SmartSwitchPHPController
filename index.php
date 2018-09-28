@@ -85,7 +85,7 @@ if(!cli){
 	if(!is_numeric($timeStamp)){ die("Invalid Timestamp Format Detected");}
 
 	if(currentTime <= ($timeStamp + maxCMDAcceptTime)){
-		if(!debug){
+		if(debug){
 			echo("currentTime " . currentTime . "\n");
 			echo("timeStamp   " . $timeStamp . "\n");
 			echo($timeStamp - currentTime);
