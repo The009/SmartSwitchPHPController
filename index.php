@@ -27,13 +27,13 @@
 //Enable Command Line Interface
  define('cli', false);
 
-//The Max Amout Of Time A Command Can Be Accepted For (Helps with browsers who open the last url you had open so you don't randomly change switch modes)
-  define('maxCMDAcceptTime', 3);
+//The Max Amout Of Time in MILLISECONDS A Command Can Be Accepted For (Helps with browsers who open the last url you had open so you don't randomly change switch modes)
+  define('maxCMDAcceptTime', 500);
 
 
 //No Further Options
 
-define('currentTime', time() * 1000);
+define('currentTime', (time()) * 1000);
 $csv = array();
 $devicesDisplayed = false;
 $group = "";
@@ -84,7 +84,12 @@ if(!cli){
 
 	if(!is_numeric($timeStamp)){ die("Invalid Timestamp Format Detected");}
 
-	if(currentTime < $timeStamp + maxCMDAcceptTime){
+	if(currentTime <= ($timeStamp + maxCMDAcceptTime)){
+		if(!debug){
+			echo("currentTime " . currentTime . "\n");
+			echo("timeStamp   " . $timeStamp . "\n");
+			echo($timeStamp - currentTime);
+		}
 	}
 	else{
 		$ip = "";
@@ -160,9 +165,9 @@ if(!cli){
 
 <script type="text/javascript">
     function sendRequest(untimedURL, rowID = "top"){
-    var timeStamp = new Date();
+    var timeStamp =  new Date();
     var pageTo = '#' + rowID;
-    var timedURL = untimedURL + timeStamp.getTime() + pageTo;
+    var timedURL = untimedURL + ((timeStamp.getTime() - timeStamp.getTimezoneOffset())) + pageTo;
     window.location = timedURL;
 }
     </script>
@@ -206,7 +211,6 @@ function getDevices()
 	return $csv;
 }
 function displayDeviceList($csv){
-$currentTimeStamp = currentTime;
 ?>
 	        <div class='col-lg-3 col-md-6 mb-4'>
 	          <div class='card'>
