@@ -18,21 +18,19 @@
 *   Please send queries to the009@gmail.com
 */
 
-
 //Options For This File
 
 //Enable Debug Ouput (Works better in CLI mode))
- define('debug', false);
+define('debug', false);
 
 //Enable Command Line Interface
- define('cli', false);
+define('cli', false);
 
 //The Max Amout Of Time in MILLISECONDS A Command Can Be Accepted For (Helps with browsers who open the last url you had open so you don't randomly change switch modes)
-  define('maxCMDAcceptTime', 500);
+define('maxCMDAcceptTime', 500);
 
 
 //No Further Options
-
 define('currentTime', (time()) * 1000);
 $csv = array();
 $devicesDisplayed = false;
@@ -41,23 +39,23 @@ $group = "";
 if(cli){
   if($argv[1] == "group"){
     $group = $argv[2];
-		$action = $argv[3];
-		$ip = "";
-		$port = "";
-		$deviceType = "";
+    $action = $argv[3];
+    $ip = "";
+    $port = "";
+    $deviceType = "";
   }
   else{
-	   $ip = $argv[1];
-     $port = $argv[2];
-     $action = $argv[3];
-     $deviceType = $argv[4];
-     if(count($argv) == 6){
-       $rawCommand = $argv[5];
-     }
-     else{
-       $rawCommand = "";
-     }
-   }
+    $ip = $argv[1];
+    $port = $argv[2];
+    $action = $argv[3];
+    $deviceType = $argv[4];
+    if(count($argv) == 6){
+      $rawCommand = $argv[5];
+    }
+    else{
+      $rawCommand = "";
+    }
+  }
 }
 else{
   $ip = isset($_GET['ip']) ? $_GET['ip'] : '';
@@ -79,28 +77,28 @@ if(debug){
 
 if(!cli){
   if(!$timeStamp){
-	   $timeStamp = (currentTime + maxCMDAcceptTime) + 55;
-	}
+    $timeStamp = (currentTime + maxCMDAcceptTime) + 55;
+  }
 
   if(!is_numeric($timeStamp)){ die("Invalid Timestamp Format Detected");}
 
   if(currentTime <= ($timeStamp + maxCMDAcceptTime)){
     if(debug){
       echo("Current Time Stamp " . currentTime . "\n");
-			echo("Given Time Stamp " . $timeStamp . "\n");
-			echo("Time Stamp Diff " . ($timeStamp - currentTime)) . "\n";
-		}
-	}
-	else{
-		$ip = "";
-		$port = "";
-		$action = "";
-		$deviceType = "";
-		$group = "";
-		$timeStamp = "";
-		header("location: ?");
-	 }
+      echo("Given Time Stamp " . $timeStamp . "\n");
+      echo("Time Stamp Diff " . ($timeStamp - currentTime)) . "\n";
+    }
   }
+  else{
+    $ip = "";
+    $port = "";
+    $action = "";
+    $deviceType = "";
+    $group = "";
+    $timeStamp = "";
+    header("location: ?");
+  }
+}
 
 if($group != "" && $action != ""){
 if(debug)echo("Sending Group: " . $group . "\n Action: " . $action . "\n");
@@ -110,33 +108,30 @@ if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action i
 groupSend($action, $group);
 }
 else{
-	if($ip)if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE)){} else { die("".$ip." is not a valid IP address");}
-	if($port)if(($port >= 1) && ($port <= 65535)){} else { die("$port is not a valid port");}
-	if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
-	if($deviceType)if(preg_match("/^[a-zA-Z0-9]+$/", $deviceType) == 1){} else { die("$deviceType is not a valid DeviceType"); }
-	if(cli)if($action == "raw"){if(json_decode($rawCommand) != null ){} else { die("Your Raw Command dose not appear to be valid JSON!");}}
-	if(!cli){ $rawCommand = "";}
-
-	if( $ip && $port && $action && $deviceType != ""){
-		send($action, $deviceType, $ip, $port, $rawCommand);
-	}
-
+  if($ip)if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE)){} else { die("".$ip." is not a valid IP address");}
+  if($port)if(($port >= 1) && ($port <= 65535)){} else { die("$port is not a valid port");}
+  if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
+  if($deviceType)if(preg_match("/^[a-zA-Z0-9]+$/", $deviceType) == 1){} else { die("$deviceType is not a valid DeviceType"); }
+  if(cli)if($action == "raw"){if(json_decode($rawCommand) != null ){} else { die("Your Raw Command dose not appear to be valid JSON!");}}
+  if(!cli){ $rawCommand = "";}
+  if( $ip && $port && $action && $deviceType != ""){
+    send($action, $deviceType, $ip, $port, $rawCommand);
+  }
 }
 
-
 function groupSend($action, $group){
-  foreach(getDevices() as $i => $item) {
+  foreach(getDevices() as $i => $item){
     if($item["group"] == $group){
       if(debug)echo("Found Group '" . $group . "'\n");
-		  send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
-    }
+        send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
+      }
     if($group == "all"){
       if(debug)echo("Found Group '" . $group . "'\n");
-      send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
-    }
-    else{
-      if(debug)echo("Did Not Find Any Match Of Group '" . $group . "'\n");
-    }
+        send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
+      }
+      else{
+        if(debug)echo("Did Not Find Any Match Of Group '" . $group . "'\n");
+      }
   }
 }
 
@@ -156,31 +151,29 @@ function getDevices(){
 
 function send($command , $plugType, $ip, $port, $rawCommand = NULL)
 {
+  switch(strtolower($command)) {
+    case "on": $payload = '{"system":{"set_relay_state":{"state":1}}}';
+    break;
+    case "off": $payload = '{"system":{"set_relay_state":{"state":0}}}';
+    break;
+    case "sysinfo": $payload = '{"system":{"get_sysinfo":null}}';
+    break;
+    case "ledoff": $payload = '{"system":{"set_led_off":{"off":1}}}';
+    break;
+    case "ledon": $payload = '{"system":{"set_led_off":{"off":0}}}';
+    break;
+    case "raw": $payload = $rawCommand;
+    break;
+    case "" : die("No Command");
+    break;
+    default:
+    die("Action error");
+    break;
+  }
 
-	switch(strtolower($command)) {
-		case "on": $payload = '{"system":{"set_relay_state":{"state":1}}}';
-		break;
-		case "off": $payload = '{"system":{"set_relay_state":{"state":0}}}';
-		break;
-		case "sysinfo": $payload = '{"system":{"get_sysinfo":null}}';
-		break;
-		case "ledoff": $payload = '{"system":{"set_led_off":{"off":1}}}';
-		break;
-		case "ledon": $payload = '{"system":{"set_led_off":{"off":0}}}';
-		break;
-		case "raw": $payload = $rawCommand;
-		break;
-		case "" : die("No Command");
-		break;
-		default:
-		die("Action error");
-		break;
-		}
-
-	if($plugType == "HS105"){
-
-		if(debug){echo("Using HS105 Encryption \n");}
-		  $key = 171;
+  if($plugType == "HS105"){
+    if(debug){echo("Using HS105 Encryption \n");}
+      $key = 171;
 		  $message = "\0\0\0" . chr(strlen($payload));
 		  foreach (str_split($payload) as $cnt1) {
         $a = $key ^ ord($cnt1);
@@ -389,4 +382,4 @@ EOD;
 
 </body>
 </html>
-<?php } //Fun Note.. I used Notepad to write this. Sorry if the spacing sucks.?>
+<?php }?>
