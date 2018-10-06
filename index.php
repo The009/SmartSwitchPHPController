@@ -72,7 +72,7 @@ if(debug){
   echo("Action: " . $action . "\n");
   echo("DevTyp: " . $deviceType . "\n" );
   echo("RawCMDType: " . $deviceType . "\n" );
-  echo("Time Stamp: " . $timeStamp . "\n" );
+  if(!cli)echo("Time Stamp: " . $timeStamp . "\n" );
 }
 
 if(!cli){
@@ -171,8 +171,8 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL)
     break;
   }
 
-  if($plugType == "HS105"){
-    if(debug){echo("Using HS105 Encryption \n");}
+  if($plugType == "HS105" || $plugType == "HS220" ){
+    if(debug){echo("Using HS105/HS220 Encryption \n");}
       $key = 171;
 		  $message = "\0\0\0" . chr(strlen($payload));
 		  foreach (str_split($payload) as $cnt1) {
@@ -192,6 +192,7 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL)
     }
   }
 
+  if(debug){ 	echo("rawCommand: " . $rawCommand . "\n"); }
 	if(debug){ 	echo("rawSentData: " . $message . "\n"); }
 
   if (!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
@@ -227,7 +228,7 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL)
 
 function decode($encodedMsg)
 {
-  $string = substr($encodedMsg, 4);
+  $encodedMsg = substr($encodedMsg, 4);
   $key = 171;
   $message = "";
 	foreach (str_split($encodedMsg) as $cnt2) {
