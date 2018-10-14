@@ -9,50 +9,50 @@ A CLI or Web Interface written in PHP Using Sockets to directly control TP-Link 
 **To add devices to the web interface EDIT/Follow The example of devices.csv**
 ```
 deviceName,deviceIP,devicePort,deviceType,group
-Living Room Light,10.0.0.100,9999,HS200,Living Room Lights
-Living Room Lamp,10.0.0.105,9999,HS105,Living Room Lights
-Bedroom Light,10.0.0.102,9999,HS200,
+Office Light,10.0.0.181,9999,HS105,
+Living Room Light,10.0.0.179,9999,HS200,Living Room Lights
+Living Room Lamp,10.0.0.178,9999,HS105,Living Room Lights
+Dining Room,10.0.0.123,9999,HS220,
 ```
 
-**To Enable The Command Line Interface Edit index.php**
+**To Enable Debug Edit send.php**
 
-Find 
->define('cli', false); 
-
-change it to 
->define('cli', true);
-
-If you are sending commands and nothing is happening try changing 
+Find
 >define('debug', false);
 
 to
 >define('debug', true);
 
-it will just echos out some useful information.
+it will just echo out some useful information.
 
 **Debug Mode works better in CLI**
 
-## Examples
+## Examples ("" are mandatory for things with spaces in them otherwise you can usually ignore them)
 
 Usage: Single Switch Example
->php.exe index.php "IP" "Port" "Command(On/Off)" "Device Type"
+>php.exe send.php "IP" "Port" "Command(On/Off)" "Device Type"
 
 Usage: Turn On a single switch.
->php.exe index.php "10.0.0.178" "9999" "Off" "HS105"
+>php.exe send.php "10.0.0.178" "9999" "Off" "HS200"
 
 Usage: Group usage example.
->php.exe index.php "group" "group name" "action"
+>php.exe send.php "group" "group name" "action"
 
 Usage: To turn on just the group of "Living Room Lights"
->php.exe index.php "group" "Living Room Lights" "on"
+>php.exe send.php "group" "Living Room Lights" "on"
 
 Usage: To turn on every light in the config
->php.exe index.php "group" "all" "on"
+>php.exe send.php "group" "all" "on"
 
+Usage: Dimmer Function On HS220
+>php.exe send.php "IP" "Port" "dimmerAdjust" "HS220" "Dimmer Value"
+
+Usage Example: Dimmer Function On HS220
+>php.exe send.php "10.0.0.123" "9999" "dimmerAdjust" "HS220" "100"
 
 **RAW Commands can be send via CLI**
-Usage: 
->php.exe index.php "10.0.0.178" "9999" "raw" "HS105" {\"system\":{\"get_sysinfo\":null}}
+Usage:
+>php.exe send.php "10.0.0.178" "9999" "raw" "HS105" {\"system\":{\"get_sysinfo\":null}}
 
 
 When a RAW command is used the reply from the device will be given.
@@ -63,7 +63,7 @@ When a RAW command is used the reply from the device will be given.
 
 # CLI Windows Help
 
-The Smallest you can get this to run on windows is 5 files. *Unless you have php with sockets already then its 1 **index.php** file*
+The Smallest you can get this to run on windows is 5 files. *Unless you have php with sockets already then its 1 file **send.php***
 
 
 [Written / Tested on PHP 7.2](https://windows.php.net/download#php-7.2)

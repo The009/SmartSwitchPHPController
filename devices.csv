@@ -1,4 +1,7 @@
 deviceName,deviceIP,devicePort,deviceType,group
-Living Room Light,10.0.0.100,9999,HS200,Living Room Lights
-Living Room Lamp,10.0.0.105,9999,HS105,Living Room Lights
-Fun Room Light,10.0.0.102,9999,HS200,
+Office Light,10.0.0.181,9999,HS105,
+Living Room Light,10.0.0.179,9999,HS200,Living Room Lights
+Living Room Lamp,10.0.0.178,9999,HS105,Living Room Lights
+Dining Room,10.0.0.123,9999,HS220,
+Bedroom 01,10.0.0.102,9999,HS200,
+Bedroom 02,10.0.0.103,9999,HS200,
