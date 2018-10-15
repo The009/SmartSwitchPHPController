@@ -23,18 +23,10 @@
 //Enable Debug Ouput (Works better in CLI mode))
 define('debug', false);
 
-//The Max Amout Of Time in MILLISECONDS A Command Can Be Accepted For (Helps with browsers who open the last url you had open so you don't randomly change switch modes)
-define('maxCMDAcceptTime', 500);
-
-
 //No Further Options
-
-define('currentTime', (time()) * 1000);
-
 $csv = array();
 $devicesDisplayed = false;
 $group = "";
-$timeStamp = 0;
 
 if(getenv('SERVER_ADDR') == null){
   if($argv[1] == "group"){
@@ -43,6 +35,7 @@ if(getenv('SERVER_ADDR') == null){
     $ip = "";
     $port = "";
     $deviceType = "";
+    $dimmerValue = "";
   }
   else{
     $ip = $argv[1];
@@ -54,6 +47,7 @@ if(getenv('SERVER_ADDR') == null){
       $rawCommand = "";
     }else if(count($argv) == 6){
         $rawCommand = $argv[5];
+        $dimmerValue = "";
     }else{
       $rawCommand = "";
       $dimmerValue = "";
@@ -66,7 +60,6 @@ else{
   $action = isset($_GET['action']) ? $_GET['action'] : '';
   $deviceType = isset($_GET['deviceType']) ? $_GET['deviceType'] : '';
   $group = isset($_GET['group']) ? $_GET['group'] : '';
-  $timeStamp = isset($_GET['timeStamp']) ? $_GET['timeStamp'] : '';
   $rawCommand = isset($_GET['rawCommand']) ? $_GET['rawCommand'] : '';
   $dimmerValue = isset($_GET['dimmerValue']) ? $_GET['dimmerValue'] : '';
 }
@@ -76,33 +69,7 @@ if(debug){
   echo("Port: " . $port . "\n");
   echo("Action: " . $action . "\n");
   echo("DevTyp: " . $deviceType . "\n" );
-  if($timeStamp)echo("Time Stamp: " . $timeStamp . "\n" );
   if($dimmerValue)echo("Dimmer Value: " . $dimmerValue . "\n");
-}
-
-if(getenv('SERVER_ADDR') == null){
-    if(!$timeStamp){
-    $timeStamp = (currentTime + maxCMDAcceptTime) + 55;
-  }
-
-  if(!is_numeric($timeStamp)){ die("Invalid Timestamp Format Detected");}
-
-  if(currentTime <= ($timeStamp + maxCMDAcceptTime)){
-    if(debug){
-      echo("Current Time Stamp " . currentTime . "\n");
-      echo("Given Time Stamp " . $timeStamp . "\n");
-      echo("Time Stamp Diff " . ($timeStamp - currentTime)) . "\n";
-    }
-  }
-  else{
-    $ip = "";
-    $port = "";
-    $action = "";
-    $deviceType = "";
-    $group = "";
-    $timeStamp = "";
-    header("location: ?");
-  }
 }
 
 if($group != "" && $action != ""){
