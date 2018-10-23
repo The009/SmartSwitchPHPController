@@ -35,9 +35,10 @@ require_once('send.php');
     <link href="css/heroic-features.css" rel="stylesheet">
     <!-- Custom Icon for this template -->
 	  <link rel="icon" type="image/png" href="vendor/icon/48px-System-shutdown.svg.png"/>
-    <!-- Java Script For Dimmer  -->
+    <!-- Java Script Load of JQuery  -->
     <script src="vendor/jquery/jquery.min.js"></script>
 
+    <!-- JavaScript for sending of data  -->
     <script type="text/javascript">
     $( document ).ready(function() {
     	$("#dimmverValue").change(function() {
@@ -195,16 +196,14 @@ EOD;
 <footer class="py-5 bg-dark">
   <div class="container">
     <p class="m-0 text-center text-white">Copyright &copy; The009 <a href="https://www.the009.net" target="_blank">www.the009.net</a> 2018</p>
-	  <p class="m-0 text-center text-white"><a href="https://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.1.1.4</a><br />
+	  <p class="m-0 text-center text-white"><a href="https://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.1.1.5</a><br />
 	     This work is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">The GNU General Public License v3.0</a>.
     </p>
   </div>
   <!-- /.container -->
   </footer>
   <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
 <?php }?>
