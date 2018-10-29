@@ -118,6 +118,7 @@ function displayDeviceList($csv){
 	 $groupedLights = array();
 	 foreach ($unique as $key2 => $uniqueGroupIDs){
      if($uniqueGroupIDs != ""){
+
 echo <<<EOD
 	   <a name = "Group{$key2}"></a>
 	   <div class='col-lg-3 col-md-6 mb-4'>
@@ -145,12 +146,13 @@ EOD;
   }
 
   foreach($csv as $i => $item) {
+    $backgroundColor = ($item['color'] !="" ? $item['color'] : "#ffffff");
 echo <<<EOD
     <a name = "{$i}"></a>
     <div class='col-lg-3 col-md-6 mb-4'>
       <div class='card'>
-        <div class='card-body'>
-          <h4 class='card-title'>{$item["deviceName"]}</h4>
+        <div class='card-body' style='background-color:{$backgroundColor}'>
+          <h3 class='card-title'>{$item["deviceName"]}</h3>
           <p class='card-text'></p>
         </div>
         <div class='card-footer'>
@@ -196,7 +198,7 @@ EOD;
 <footer class="py-5 bg-dark">
   <div class="container">
     <p class="m-0 text-center text-white">Copyright &copy; The009 <a href="https://www.the009.net" target="_blank">www.the009.net</a> 2018</p>
-	  <p class="m-0 text-center text-white"><a href="https://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version 1.1.1.5</a><br />
+	  <p class="m-0 text-center text-white"><a href="https://programs.the009.net/SmartSwitchPHPController/" target="_blank">Version <?php echo versionNumber;?></a><br />
 	     This work is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">The GNU General Public License v3.0</a>.
     </p>
   </div>

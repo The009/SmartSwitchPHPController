@@ -18,16 +18,16 @@
 *   Please send queries to the009@gmail.com
 */
 
-//Options For This File
-
-//Enable Debug Ouput (Works better in CLI mode))
+//Single Option: Enable Debug Ouput (Works better in CLI mode))
 define('debug', false);
+
+//Define The Version Number For the project due to everything requireing send.php
+define('versionNumber', "1.1.1.6");
 
 //No Further Options
 $csv = array();
 $devicesDisplayed = false;
 $group = "";
-
 if(getenv('SERVER_ADDR') == null){
   if($argv[1] == "group"){
     $group = $argv[2];
@@ -103,7 +103,7 @@ function groupSend($action, $group){
         send($action, $item["deviceType"], $item["deviceIP"], $item["devicePort"], "");
       }
       else{
-        if(debug)echo("Did Not Find Any Match Of Group '" . $group . "'\n");
+        if(debug)echo("Group '". $item["group"] . "' Is not a match for Group '" . $group . "'\n");
       }
   }
 }

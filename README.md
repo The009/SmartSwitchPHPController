@@ -7,12 +7,13 @@ A CLI or Web Interface written in PHP Using Sockets to directly control TP-Link 
 ## Options
 
 **To add devices to the web interface EDIT/Follow The example of devices.csv**
+*The background color of the device card is the color option in the csv use HTML color codes*
 ```
-deviceName,deviceIP,devicePort,deviceType,group
-Office Light,10.0.0.181,9999,HS105,
-Living Room Light,10.0.0.179,9999,HS200,Living Room Lights
-Living Room Lamp,10.0.0.178,9999,HS105,Living Room Lights
-Dining Room,10.0.0.123,9999,HS220,
+deviceName,deviceIP,devicePort,deviceType,group,color
+Office Light,10.0.0.181,9999,HS105,,
+Living Room Light,10.0.0.179,9999,HS200,Living Room Lights,lightBlue
+Living Room Lamp,10.0.0.178,9999,HS105,Living Room Lights,lightBlue
+Dining Room,10.0.0.123,9999,HS220,,
 ```
 
 **To Enable Debug Edit send.php**
