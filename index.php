@@ -42,12 +42,11 @@ require_once('send.php');
 ?>
     <!-- JavaScript for sending of data  -->
     <script type="text/javascript">
+      $( document ).ready(function() {
 <?php
-
   foreach($csv as $i => $item) {
     if($item['deviceType'] == "HS220"){
 echo <<<EOD
-       $( document ).ready(function() {
          $("#dimmverValue{$i}").change(function() {
            $.ajax({
              url: 'send.php',
@@ -59,11 +58,12 @@ echo <<<EOD
              }
            });
          });
-       });
 EOD;
     }
 }
 ?>
+      });
+
     function SingleSend( givenIp, givenPort, reqAction, devTyp){
       var ip = givenIp;
       var port = givenPort;
