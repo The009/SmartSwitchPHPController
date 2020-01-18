@@ -89,3 +89,7 @@ extension_dir = "."
 If you want the php_sockets.dll to be in a folder change ```extension_dir = "." ```to ```extension_dir = "folderName/"```
 
 Then you are done. Open your fav CMD line app and use the usage examples above.
+
+## Important Mentions:
+
+@KrunkZhou for finding and fixing a bug with more then one dimmer. https://github.com/The009/SmartSwitchPHPController/issues/1

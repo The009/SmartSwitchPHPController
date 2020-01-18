@@ -41,17 +41,17 @@ require_once('send.php');
     <!-- JavaScript for sending of data  -->
     <script type="text/javascript">
     $( document ).ready(function() {
-    	$("#dimmverValue").change(function() {
+      $("#dimmverValue{$i}").change(function() {
         $.ajax({
           url: 'send.php',
           type: 'get',
-          data: $("form").serialize(),
+          data: $("#form{$i}").serialize(),
           success: function(response){
             console.log("Enable debug in send.php for response");
             console.log( response );
           }
         });
-    	});
+      });
     });
 
     function SingleSend( givenIp, givenPort, reqAction, devTyp){
@@ -163,14 +163,13 @@ if($item['deviceType'] == "HS220"){
 echo <<<EOD
       <p> </p>
       <div id="slider_container">
-      <form>
-      <input id="deviceIP" name="ip" type="hidden" value="{$item["deviceIP"]}" />
-      <input id="devicePort" name="port" type="hidden" value="{$item["devicePort"]}" />
-      <input id="action" name="action" type="hidden" value="dimmerAdjust" />
-      <input id="deviceType" name="deviceType" type="hidden" value="{$item["deviceType"]}" />
-      <input id="dimmverValue" name="dimmerValue" type="range" min="1" max="100" step="1" value="50" />
-      </form>
-
+        <form id="form{$i}">
+          <input id="deviceIP" name="ip" type="hidden" value="{$item["deviceIP"]}" />
+          <input id="devicePort" name="port" type="hidden" value="{$item["devicePort"]}" />
+          <input id="action" name="action" type="hidden" value="dimmerAdjust" />
+          <input id="deviceType" name="deviceType" type="hidden" value="{$item["deviceType"]}" />
+          <input id="dimmverValue{$i}" name="dimmerValue" type="range" min="1" max="100" step="1" value="50" />
+        </form>
       </div>
 EOD;
 }
