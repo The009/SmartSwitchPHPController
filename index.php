@@ -37,23 +37,33 @@ require_once('send.php');
 	  <link rel="icon" type="image/png" href="vendor/icon/48px-System-shutdown.svg.png"/>
     <!-- Java Script Load of JQuery  -->
     <script src="vendor/jquery/jquery.min.js"></script>
-
+<?php
+  function displayDeviceList($csv){
+?>
     <!-- JavaScript for sending of data  -->
     <script type="text/javascript">
-    $( document ).ready(function() {
-      $("#dimmverValue{$i}").change(function() {
-        $.ajax({
-          url: 'send.php',
-          type: 'get',
-          data: $("#form{$i}").serialize(),
-          success: function(response){
-            console.log("Enable debug in send.php for response");
-            console.log( response );
-          }
-        });
-      });
-    });
+<?php
 
+  foreach($csv as $i => $item) {
+    if($item['deviceType'] == "HS220"){
+echo <<<EOD
+       $( document ).ready(function() {
+         $("#dimmverValue{$i}").change(function() {
+           $.ajax({
+             url: 'send.php',
+             type: 'get',
+             data: $("#form{$i}").serialize(),
+             success: function(response){
+               console.log("Enable debug in send.php for response");
+               console.log( response );
+             }
+           });
+         });
+       });
+EOD;
+    }
+}
+?>
     function SingleSend( givenIp, givenPort, reqAction, devTyp){
       var ip = givenIp;
       var port = givenPort;
@@ -97,9 +107,6 @@ require_once('send.php');
 
     <!-- Page Features -->
     <div class="row text-center my-3">
-<?php
-function displayDeviceList($csv){
-?>
       <div class='col-lg-3 col-md-6 mb-4'>
         <div class='card'>
           <div class='card-body'>
@@ -186,7 +193,29 @@ EOD;
 			if(!$devicesDisplayed){
 					$devicesDisplayed = true;
 					displayDeviceList(getDevices());
-			}
+			}else{
+?>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="?">Smart Switch PHP Controller</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+
+<?php
+}
 ?>
   </div>
       <!-- /.row -->
