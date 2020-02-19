@@ -51,6 +51,9 @@ Usage: Dimmer Function On HS220
 Usage Example: Dimmer Function On HS220
 >php.exe send.php "10.0.0.123" "9999" "dimmerAdjust" "HS220" "100"
 
+Usage Example: Connect To Wi-Fi Network
+>php send.php "10.0.0.123" "9999" "connecttonetwork" "HS105" "NetworkSSID" "NetworkPassword"
+
 **RAW Commands can be send via CLI**
 Usage:
 >php.exe send.php "10.0.0.178" "9999" "raw" "HS105" {\"system\":{\"get_sysinfo\":null}}

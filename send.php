@@ -18,11 +18,18 @@
 *   Please send queries to the009@gmail.com
 */
 
-//Single Option: Enable Debug Ouput (Works better in CLI mode))
+##############
+#  OPTIONS  #
+#############
+
+//: Enable Debug Ouput (Works better in CLI mode))
 define('debug', false);
 
+//Define the Time-Zone for your system to set the clocks on the switches. : https://www.php.net/manual/en/timezones.php
+define('timeZone', 'America/New_York');
+
 //Define The Version Number For the project due to everything requireing send.php
-define('versionNumber', "1.1.2.6");
+define('versionNumber', "1.1.2.7");
 
 //No Further Options
 $csv = array();
@@ -48,6 +55,9 @@ if(getenv('SERVER_ADDR') == null){
     }else if(count($argv) == 6){
         $rawCommand = $argv[5];
         $dimmerValue = "";
+    }else if($action == "connecttonetwork"){
+      $rawCommand = $argv[5];
+      $dimmerValue = $argv[6];
     }else{
       $rawCommand = "";
       $dimmerValue = "";
@@ -85,7 +95,7 @@ else{
   if($action)if(preg_match("/^[a-zA-Z]+$/", $action) == 1){} else { die("$action is not a valid action"); }
   if($deviceType)if(preg_match("/^[a-zA-Z0-9]+$/", $deviceType) == 1){} else { die("$deviceType is not a valid DeviceType"); }
   if($action == "raw"){if(json_decode($rawCommand) != null ){} else { die("Your Raw Command dose not appear to be valid JSON!");}}
-  if($dimmerValue)if(!is_numeric($dimmerValue)) die("Dimmer Value dose not appear to be numeric.");
+  if($dimmerValue && $action != "connecttonetwork")if(!is_numeric($dimmerValue)) die("Dimmer Value dose not appear to be numeric.");
 
   if( $ip && $port && $action && $deviceType != ""){
     send($action, $deviceType, $ip, $port, $rawCommand, $dimmerValue);
@@ -124,6 +134,7 @@ function getDevices(){
 
 function send($command , $plugType, $ip, $port, $rawCommand = NULL, $dimmerValue = NULL)
 {
+  $date = new DateTime("now", new DateTimeZone(timeZone));
   switch(strtolower($command)) {
     case "on": $payload = '{"system":{"set_relay_state":{"state":1}}}';
     break;
@@ -136,6 +147,12 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL, $dimmerValue
     case "ledon": $payload = '{"system":{"set_led_off":{"off":0}}}';
     break;
     case "dimmeradjust": $payload = '{"smartlife.iot.dimmer":{"set_brightness":{"brightness":'. $dimmerValue . '}}}';
+    break;
+    case "scannetwork": $payload = '{"netif":{"get_scaninfo":{"refresh":1}}}';
+    break;
+    case "connecttonetwork": $payload = '{"netif":{"set_stainfo":{"ssid":"'. $rawCommand .'","password":"'. $dimmerValue .'","key_type":3}}}';
+    break;
+    case "updatetime": $payload = '{"time":{"set_timezone":{"year":'.$date->format('Y').',"month":'.$date->format('n').',"mday":'.$date->format('j').',"hour":'.$date->format('G').',"min":'.$date->format('i').',"sec":'.$date->format('s').',"index":42}}}';
     break;
     case "raw": $payload = $rawCommand;
     break;
@@ -200,8 +217,8 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL, $dimmerValue
 
   if(debug){echo "Closing Socket \n";}
   socket_close($sock);
-
-  if(debug || ($rawCommand != "")){echo(json_decode(json_encode(decode($buff))) ."\n" );}
+  $sendResult = json_decode(json_encode(decode($buff))) ."\n";
+  if(debug){echo $sendResult;}
 }
 
 function decode($encodedMsg)
