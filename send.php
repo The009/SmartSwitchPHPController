@@ -185,7 +185,7 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL, $dimmerValue
     }
   }
 
-  if(debug && $rawCommand != ""){ 	echo("rawCommand: " . $rawCommand . "\n"); }
+  if(debug || $rawCommand != ""){ 	echo("rawCommand: " . $rawCommand . "\n"); }
 	if(debug){ 	echo("rawSentData: " . $message . "\n"); }
 
   if (!($sock = socket_create(AF_INET, SOCK_STREAM, 0))) {
@@ -208,7 +208,7 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL, $dimmerValue
 
   $buff = 'Buffer STRING';
 
-  if (false !== ($bytes = socket_recv($sock, $buff, 1024, 0))) {
+  if (false !== ($bytes = socket_recv($sock, $buff, 2048, 0))) {
     if(debug){echo "Read {$bytes} bytes of socket_recv(). \n";}
   }
   else{
@@ -218,7 +218,7 @@ function send($command , $plugType, $ip, $port, $rawCommand = NULL, $dimmerValue
   if(debug){echo "Closing Socket \n";}
   socket_close($sock);
   $sendResult = json_decode(json_encode(decode($buff))) ."\n";
-  if(debug){echo $sendResult;}
+  if(debug  || rawCommand != "" ){echo $sendResult;}
 }
 
 function decode($encodedMsg)
